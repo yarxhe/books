@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>КНИГА КИРИЛЛА</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="mobile-header">
+        <button id="menu-toggle" onclick="toggleMenu()">☰ ОГЛАВЛЕНИЕ</button>
+        <div class="mobile-title">КНИГА КИРИЛЛА</div>
+    </div>
+
+    <div id="sidebar">
+        <h2 onclick="goToPage(0)" style="cursor: pointer; title: 'На обложку'">📖 ОБЛОЖКА</h2>
+        
+        <div style="color: #888; text-align: center; margin-bottom: 10px; font-size: 0.8em;">ГЛАВЫ:</div>
+        <div id="toc-list">
+            <div class="loading">Загрузка оглавления...</div>
+        </div>
+        
+        <hr>
+        <div style="color: #888; text-align: center; margin-bottom: 10px; font-size: 0.8em;">ПРИЛОЖЕНИЯ:</div>
+        <div class="forms-menu">
+            <div class="toc-item form-btn" onclick="goToForm('epilation')">
+                <span>🪒 Эпиляция</span>
+                <span class="toc-dots"></span>
+                <span id="toc-epilation-page">?</span>
+            </div>
+            <div class="toc-item form-btn hardcore" onclick="goToForm('depilation')">
+                <span>🔥 Депиляция</span>
+                <span class="toc-dots"></span>
+                <span id="toc-depilation-page">?</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-content">
+        
+        <!-- ОБЛОЖКА (Стр. 0, номера нет) -->
+        <div id="cover-view" class="view-container">
+            <div class="book-cover">
+                <div class="book-spine"></div>
+                <div class="book-front" onclick="changePage(1)" style="cursor: pointer;">
+                    <h1>КНИГА<br>КИРИЛЛА</h1>
+                    <div class="open-hint">Нажмите, чтобы открыть ▶</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- СТРАНИЦА ОБИДЧИКА -->
+        <div id="page-view" class="view-container hidden">
+            <div class="page-container page-stack">
+                <div id="page-display-content">
+                    <!-- Контент генерируется в JS -->
+                </div>
+                
+                <!-- Панель перелистывания -->
+                <div class="pagination">
+                    <button class="nav-btn" onclick="changePage(-1)">◀ Назад</button>
+                    <div class="page-number">Стр. <span class="current-page-num">1</span></div>
+                    <button class="nav-btn" onclick="changePage(1)">Вперед ▶</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ФОРМА 1: ЭПИЛЯЦИЯ -->
+        <div id="epilation-view" class="view-container hidden">
+            <div class="page-container page-stack">
+                <div class="bureaucracy-form">
+                    <h2 class="form-title">📜 ФОРМА ЭПИЛЛЯЦИИ</h2>
+                    <p class="form-subtitle">Упрощенная процедура обжалования</p>
+                    <hr>
+                    <label>ФИО:</label> <input type="text" id="e_name" placeholder="Иванов Иван">
+                    <label>Прозвище:</label> <input type="text" id="e_nickname" placeholder="Лысый из Браззерс">
+
+                    <p>Уровень обиды:</p>
+                    <div class="radio-group">
+                        <label><input type="radio" name="e_level" value="слегка задело"> слегка задело</label>
+                        <label><input type="radio" name="e_level" value="уже неприятно"> уже неприятно</label>
+                        <label><input type="radio" name="e_level" value="Кирилл, мы поговорим"> Кирилл, мы поговорим</label>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <div style="flex:1"><label>На какой странице вас задели?</label><input type="text" id="e_page" placeholder="Стр. X"></div>
+                        <div style="flex:1"><label>Абзац:</label><input type="text" id="e_paragraph"></div>
+                    </div>
+                    <label>Краткое содержание боли:</label>
+                    <textarea id="e_pain" rows="3" placeholder="Я просто тогда пошутил..."></textarea>
+
+                    <p>Требуемые меры:</p>
+                    <div class="checkbox-group" id="e_measures">
+                        <label><input type="checkbox" value="Удалить"> Удалить (как лишний волос)</label>
+                        <label><input type="checkbox" value="Исправить"> Исправить (подровнять)</label>
+                        <label><input type="checkbox" value="Извиниться публично"> Извиниться публично со слезами</label>
+                    </div>
+
+                    <div class="buttons">
+                        <button class="copy-btn" onclick="copyForm('epilation')">📋 Копировать</button>
+                        <button class="send-btn" onclick="sendForm('epilation')">✈️ Отправить в TG</button>
+                    </div>
+                </div>
+                
+                <div class="pagination">
+                    <button class="nav-btn" onclick="changePage(-1)">◀ Назад</button>
+                    <div class="page-number">Стр. <span class="current-page-num">X</span></div>
+                    <button class="nav-btn" onclick="changePage(1)">Вперед ▶</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ФОРМА 2: ДЕПИЛЯЦИЯ -->
+        <div id="depilation-view" class="view-container hidden">
+            <div class="page-container page-stack">
+                <div class="bureaucracy-form">
+                    <h2 class="form-title" style="color: #ff3333;">🔥 ФОРМА ДЕПИЛЯЦИИ</h2>
+                    <p class="form-subtitle">Глубокая апелляция</p>
+                    <hr>
+                    <label>Полное ФИО:</label> <input type="text" id="d_name" placeholder="Без шуток тут">
+                    <label>Почему вы решили, что имеете право мне писать?</label> <input type="text" id="d_reason" placeholder="Мама сказала, что я особенный...">
+
+                    <p>Оценка действий Автора (Кирилла):</p>
+                    <div class="radio-group">
+                        <label><input type="radio" name="d_blame" value="Кирилл немного ошибся"> Кирилл немного ошибся</label>
+                        <label><input type="radio" name="d_blame" value="Кирилл перегнул палку"> Кирилл перегнул палку</label>
+                        <label><input type="radio" name="d_blame" value="Я требую Гаагский трибунал"> Я требую Гаагский трибунал</label>
+                    </div>
+
+                    <label>Детальное описание травмы:</label> <textarea id="d_trauma" rows="4"></textarea>
+                    <label>Смягчающие обстоятельства:</label> <textarea id="d_excuse" rows="2"></textarea>
+
+                    <p>Готовность к компенсации (ОБЯЗАТЕЛЬНО):</p>
+                    <div class="checkbox-group" id="d_compensation">
+                        <label><input type="checkbox" value="Оплатить пиццу"> Оплатить пиццу / шаурму</label>
+                        <label><input type="checkbox" value="Признать гениальность"> Признать гениальность Кирилла</label>
+                        <label><input type="checkbox" value="Стать рабом"> Стать рабом на неделю</label>
+                    </div>
+
+                    <hr>
+                    <div class="checkbox-group">
+                        <label style="color:#ff5555; font-weight:bold;">
+                            <input type="checkbox" id="d_agree" required> Я осознаю, что форма будет проигнорирована.
+                        </label>
+                    </div>
+
+                    <div class="buttons">
+                        <button class="copy-btn" onclick="copyForm('depilation')">📋 Копировать</button>
+                        <button class="send-btn" style="background:#cc0000;" onclick="sendForm('depilation')">✈️ Отправить</button>
+                    </div>
+                </div>
+
+                <div class="pagination">
+                    <button class="nav-btn" onclick="changePage(-1)">◀ Назад</button>
+                    <div class="page-number">Стр. <span class="current-page-num">X</span></div>
+                    <button class="nav-btn" style="visibility: hidden;">Вперед ▶</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
