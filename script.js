@@ -1,5 +1,5 @@
 // --- НАСТРОЙКИ ---
-const YOUR_TELEGRAM_USERNAME = 'tvoj_nik'; // Впиши сюда свой ник без @
+const YOUR_TELEGRAM_USERNAME = 'yarxhe3'; // Впиши сюда свой ник без @
 
 let originalData =[]; 
 let bookPages =[]; // Массив ВСЕХ страниц книги (0 = обложка, 1..N = обидчики, N+1 = эпиляция...)
