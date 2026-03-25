@@ -2,27 +2,32 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- viewport-fit=cover нужен, чтобы заполнить экран на iPhone до самых краев -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>КНИГА КИРИЛЛА</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- Затемнение фона при открытом меню на мобилке -->
+    <div id="menu-overlay" onclick="toggleMenu()"></div>
+
+    <!-- Шапка для мобилок (стеклянная) -->
     <div id="mobile-header">
         <button id="menu-toggle" onclick="toggleMenu()">☰ ОГЛАВЛЕНИЕ</button>
         <div class="mobile-title">КНИГА КИРИЛЛА</div>
     </div>
 
     <div id="sidebar">
-        <h2 onclick="goToPage(0)" style="cursor: pointer; title: 'На обложку'">📖 ОБЛОЖКА</h2>
+        <h2 onclick="goToPage(0)" style="cursor: pointer;">📖 ОБЛОЖКА</h2>
         
-        <div style="color: #888; text-align: center; margin-bottom: 10px; font-size: 0.8em;">ГЛАВЫ:</div>
+        <div class="sidebar-section-title">ГЛАВЫ:</div>
         <div id="toc-list">
             <div class="loading">Загрузка оглавления...</div>
         </div>
         
         <hr>
-        <div style="color: #888; text-align: center; margin-bottom: 10px; font-size: 0.8em;">ПРИЛОЖЕНИЯ:</div>
+        <div class="sidebar-section-title">ПРИЛОЖЕНИЯ:</div>
         <div class="forms-menu">
             <div class="toc-item form-btn" onclick="goToForm('epilation')">
                 <span>🪒 Эпиляция</span>
@@ -39,11 +44,11 @@
 
     <div id="main-content">
         
-        <!-- ОБЛОЖКА (Стр. 0, номера нет) -->
+        <!-- ОБЛОЖКА -->
         <div id="cover-view" class="view-container">
-            <div class="book-cover">
+            <div class="book-cover" onclick="changePage(1)">
                 <div class="book-spine"></div>
-                <div class="book-front" onclick="changePage(1)" style="cursor: pointer;">
+                <div class="book-front">
                     <h1>КНИГА<br>КИРИЛЛА</h1>
                     <div class="open-hint">Нажмите, чтобы открыть ▶</div>
                 </div>
@@ -57,7 +62,6 @@
                     <!-- Контент генерируется в JS -->
                 </div>
                 
-                <!-- Панель перелистывания -->
                 <div class="pagination">
                     <button class="nav-btn" onclick="changePage(-1)">◀ Назад</button>
                     <div class="page-number">Стр. <span class="current-page-num">1</span></div>
@@ -83,9 +87,9 @@
                         <label><input type="radio" name="e_level" value="Кирилл, мы поговорим"> Кирилл, мы поговорим</label>
                     </div>
 
-                    <div style="display: flex; gap: 10px;">
-                        <div style="flex:1"><label>На какой странице вас задели?</label><input type="text" id="e_page" placeholder="Стр. X"></div>
-                        <div style="flex:1"><label>Абзац:</label><input type="text" id="e_paragraph"></div>
+                    <div class="input-row">
+                        <div class="input-col"><label>Страница:</label><input type="text" id="e_page" placeholder="Стр. X"></div>
+                        <div class="input-col"><label>Абзац:</label><input type="text" id="e_paragraph" placeholder="№"></div>
                     </div>
                     <label>Краткое содержание боли:</label>
                     <textarea id="e_pain" rows="3" placeholder="Я просто тогда пошутил..."></textarea>
@@ -119,9 +123,9 @@
                     <p class="form-subtitle">Глубокая апелляция</p>
                     <hr>
                     <label>Полное ФИО:</label> <input type="text" id="d_name" placeholder="Без шуток тут">
-                    <label>Почему вы решили, что имеете право мне писать?</label> <input type="text" id="d_reason" placeholder="Мама сказала, что я особенный...">
+                    <label>Почему решили писать?</label> <input type="text" id="d_reason" placeholder="Мама сказала, я особенный...">
 
-                    <p>Оценка действий Автора (Кирилла):</p>
+                    <p>Оценка действий Автора:</p>
                     <div class="radio-group">
                         <label><input type="radio" name="d_blame" value="Кирилл немного ошибся"> Кирилл немного ошибся</label>
                         <label><input type="radio" name="d_blame" value="Кирилл перегнул палку"> Кирилл перегнул палку</label>

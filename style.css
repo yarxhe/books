@@ -1,130 +1,216 @@
 :root {
-    --bg-color: #1a1a1a;
-    --book-bg: #2d2d2d;
+    --bg-color: #121212; /* Чуть темнее фон, как в iOS Dark Mode */
+    --book-bg: #222224;
     --text-color: #e0e0e0;
-    --accent: #d9534f;
-    --accent-hover: #c9302c;
-    --border: #444;
+    --accent: #d94b46;
+    --accent-hover: #b83a36;
+    --border: #3d3d3d;
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'Courier New', Courier, monospace; background-color: var(--bg-color); color: var(--text-color); margin: 0; display: flex; height: 100dvh; overflow: hidden; }
+* { 
+    box-sizing: border-box; 
+    -webkit-tap-highlight-color: transparent; 
+}
 
-/* Шапка (мобилки) */
-#mobile-header { display: none; background-color: #222; padding: 15px 20px; border-bottom: 2px solid var(--accent); align-items: center; justify-content: space-between; z-index: 100; }
-#mobile-header .mobile-title { font-weight: bold; color: var(--accent); font-size: 1.2rem; }
-#menu-toggle { background: transparent; border: 1px solid var(--border); color: var(--text-color); padding: 8px 12px; border-radius: 5px; font-size: 1rem; flex: none; }
-#menu-toggle:hover { background: #444; }
+body { 
+    font-family: -apple-system, BlinkMacSystemFont, 'Georgia', serif; /* Нативный шрифт Apple для интерфейса */
+    background-color: var(--bg-color); 
+    color: var(--text-color); 
+    margin: 0; 
+    display: flex; 
+    height: 100dvh; /* Динамическая высота iOS */
+    overflow: hidden; 
+    overscroll-behavior-y: none; /* Убираем дурацкое "резиновое" растягивание всего сайта */
+    accent-color: var(--accent); /* Красит стандартные радиокнопки и галочки iOS в красный */
+}
 
-/* Боковое меню */
-#sidebar { width: 340px; background-color: #222; border-right: 2px solid var(--border); padding: 20px; overflow-y: auto; display: flex; flex-direction: column; -webkit-overflow-scrolling: touch; }
-#sidebar h2 { text-align: center; color: var(--text-color); border-bottom: 1px solid var(--border); padding-bottom: 10px; transition: color 0.3s; }
-#sidebar h2:hover { color: var(--accent); }
+/* =========================================
+   МОБИЛЬНАЯ ШАПКА (Glassmorphism)
+========================================= */
+#mobile-header { 
+    display: none; 
+}
 
-/* ОГЛАВЛЕНИЕ КАК В КНИГЕ (С ТОЧЕЧКАМИ) */
+/* Затемнение фона при открытом меню */
+#menu-overlay {
+    display: none;
+}
+
+/* =========================================
+   БОКОВОЕ МЕНЮ (Оглавление)
+========================================= */
+#sidebar { 
+    width: 340px; 
+    background-color: #1c1c1e; 
+    border-right: 1px solid var(--border); 
+    padding: max(20px, env(safe-area-inset-top)) 20px 20px 20px; 
+    overflow-y: auto; 
+    display: flex; 
+    flex-direction: column; 
+    -webkit-overflow-scrolling: touch; 
+}
+#sidebar h2 { 
+    text-align: center; color: var(--text-color); border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-top: 0;
+}
+.sidebar-section-title {
+    color: #888; text-align: center; margin-bottom: 10px; font-size: 0.8em; font-weight: bold; font-family: -apple-system, sans-serif; letter-spacing: 1px;
+}
+
 .toc-item {
-    display: flex;
-    align-items: flex-end; /* Чтобы точки были внизу */
-    padding: 10px 12px;
-    margin: 5px 0;
-    background: var(--book-bg);
-    cursor: pointer;
-    border-radius: 5px;
-    transition: 0.2s;
-    font-size: 0.9em;
-    font-weight: bold;
+    display: flex; align-items: flex-end;
+    padding: 12px 12px; margin: 6px 0; background: #2c2c2e; cursor: pointer; border-radius: 10px; /* Скругления iOS */
+    transition: 0.2s; font-size: 0.95em; font-weight: bold; font-family: -apple-system, sans-serif;
 }
+.toc-item:active { transform: scale(0.97); opacity: 0.8; } /* Пружинящий тап */
 .toc-dots {
-    flex-grow: 1;
-    border-bottom: 2px dotted #666;
-    margin: 0 8px;
-    position: relative;
-    top: -4px;
+    flex-grow: 1; border-bottom: 2px dotted #555; margin: 0 8px; position: relative; top: -4px;
 }
-.toc-item:hover { background: #444; color: white; transform: translateX(5px); }
-.toc-item:hover .toc-dots { border-bottom-color: #aaa; }
-
-.forms-menu { margin-top: auto; }
-.form-btn { background: #3a3a3a; border: 1px dashed #666; }
+.forms-menu { margin-top: auto; padding-bottom: env(safe-area-inset-bottom); }
+.form-btn { background: #333; border: 1px dashed #666; }
 .form-btn.hardcore { border-color: var(--accent); color: #ff6666; }
-.form-btn.hardcore:hover { background: var(--accent); color: white; }
 
-#main-content { flex-grow: 1; padding: 40px; overflow-y: auto; display: flex; justify-content: center; align-items: flex-start; -webkit-overflow-scrolling: touch; perspective: 1000px; }
+/* =========================================
+   ОСНОВНОЙ КОНТЕНТ И СТРАНИЦЫ
+========================================= */
+#main-content { 
+    flex-grow: 1; 
+    padding: 40px; 
+    overflow-y: auto; 
+    display: flex; 
+    justify-content: center; 
+    align-items: flex-start; 
+    -webkit-overflow-scrolling: touch; /* Плавный скролл с инерцией */
+    perspective: 1000px; 
+}
 .view-container { width: 100%; display: flex; justify-content: center; }
 .hidden { display: none !important; }
 
 /* ОБЛОЖКА */
 #cover-view { height: 100%; align-items: center; }
-.book-cover { width: 400px; height: 600px; background-color: #6b6b6b; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E"); border-radius: 3px 12px 12px 3px; box-shadow: inset 10px 0 20px rgba(0,0,0,0.6), inset -5px 0 10px rgba(255,255,255,0.1), 15px 15px 30px rgba(0,0,0,0.8); display: flex; transition: transform 0.3s; }
-.book-cover:hover { transform: scale(1.02); }
-.book-spine { width: 25px; height: 100%; background: linear-gradient(to right, #4a4a4a 0%, #6b6b6b 20%, #3a3a3a 100%); border-radius: 3px 0 0 3px; border-right: 2px solid rgba(0,0,0,0.4); }
-.book-front { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-right: 20px; position: relative; }
-.book-front h1 { font-family: 'Times New Roman', Times, serif; color: #111; font-size: 3.5rem; text-align: center; text-shadow: 1px 1px 2px rgba(255,255,255,0.2), -1px -1px 1px rgba(0,0,0,0.5); margin: 0; }
-.open-hint { position: absolute; bottom: 30px; color: #333; font-weight: bold; opacity: 0.6; font-size: 0.9rem; letter-spacing: 1px; }
+.book-cover { 
+    width: 380px; height: 570px; background-color: #4a4a4d; 
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E"); 
+    border-radius: 4px 16px 16px 4px; 
+    box-shadow: inset 10px 0 20px rgba(0,0,0,0.6), inset -5px 0 10px rgba(255,255,255,0.05), 10px 15px 35px rgba(0,0,0,0.6); 
+    display: flex; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); cursor: pointer;
+}
+.book-cover:active { transform: scale(0.98); }
+.book-spine { width: 28px; height: 100%; background: linear-gradient(to right, #2a2a2d 0%, #4a4a4d 20%, #2a2a2d 100%); border-radius: 4px 0 0 4px; border-right: 1px solid rgba(0,0,0,0.5); }
+.book-front { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+.book-front h1 { font-family: 'Georgia', serif; color: #0a0a0a; font-size: 3.5rem; text-align: center; text-shadow: 1px 1px 1px rgba(255,255,255,0.1), -1px -2px 2px rgba(0,0,0,0.6); margin: 0; }
+.open-hint { position: absolute; bottom: 30px; color: #111; font-weight: bold; opacity: 0.5; font-size: 0.9rem; font-family: -apple-system, sans-serif; }
 
-/* СТРАНИЦЫ (ЭФФЕКТ СТОПКИ БУМАГИ) */
+/* СТРАНИЦЫ (Контент внутри книги) */
 .page-container {
-    max-width: 800px; width: 100%;
+    max-width: 750px; width: 100%;
     background: var(--book-bg);
-    padding: 40px 40px 20px 40px; /* Снизу меньше отступ для пагинации */
-    border-radius: 5px 15px 15px 5px;
-    box-shadow: -5px 0 15px rgba(0,0,0,0.5), 10px 10px 30px rgba(0,0,0,0.6);
+    padding: 50px 40px 20px 40px;
+    border-radius: 6px 18px 18px 6px;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.6), 15px 15px 40px rgba(0,0,0,0.5);
     border-left: 2px solid #555;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-height: 600px;
+    position: relative; display: flex; flex-direction: column; min-height: 650px;
 }
-/* Рисуем "листочки" сзади текущей страницы */
-.page-stack::before {
-    content: ''; position: absolute; top: 4px; right: -4px; bottom: -4px; left: 4px;
-    background: #252525; border-radius: inherit; z-index: -1; border-right: 1px solid #444; border-bottom: 1px solid #444;
-}
-.page-stack::after {
-    content: ''; position: absolute; top: 8px; right: -8px; bottom: -8px; left: 8px;
-    background: #1f1f1f; border-radius: inherit; z-index: -2; border-right: 1px solid #333; border-bottom: 1px solid #333;
-}
+.page-stack::before { content: ''; position: absolute; top: 4px; right: -4px; bottom: -4px; left: 4px; background: #252525; border-radius: inherit; z-index: -1; border-right: 1px solid #3d3d3d; border-bottom: 1px solid #3d3d3d; }
+.page-stack::after { content: ''; position: absolute; top: 8px; right: -8px; bottom: -8px; left: 8px; background: #1c1c1e; border-radius: inherit; z-index: -2; border-right: 1px solid #333; border-bottom: 1px solid #333; }
 
-#page-display-content { flex-grow: 1; }
-.crime-date { color: #888; font-size: 0.9em; text-align: right; border-bottom: 1px dashed #555; padding-bottom: 10px; margin-bottom: 20px; }
-h1 { color: var(--accent); font-size: 2.2em; text-align: center; margin-top: 0; text-transform: uppercase; }
-hr { border: 1px solid var(--border); margin: 20px 0; }
+#page-display-content { flex-grow: 1; font-family: 'Courier New', Courier, monospace; } /* Текст самой книги печатный */
+.crime-date { color: #888; font-size: 0.9em; text-align: right; border-bottom: 1px dashed #555; padding-bottom: 10px; margin-bottom: 20px; font-family: -apple-system, sans-serif;}
+h1 { color: var(--accent); font-size: 2.2em; text-align: center; margin-top: 0; }
+hr { border: 1px solid var(--border); margin: 25px 0; }
 
-/* ПАНЕЛЬ ПАГИНАЦИИ (НОМЕР СТРАНИЦЫ И КНОПКИ) */
-.pagination {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border);
-}
+/* ПАГИНАЦИЯ */
+.pagination { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border); font-family: -apple-system, sans-serif;}
 .page-number { font-size: 1.1em; color: #888; font-weight: bold; }
-.nav-btn {
-    background: transparent; border: 1px solid #555; color: var(--text-color);
-    padding: 8px 15px; border-radius: 3px; cursor: pointer; transition: 0.2s; font-family: inherit;
-    flex: none; /* Защита от растягивания */
+.nav-btn { background: #2c2c2e; border: 1px solid var(--border); color: var(--text-color); padding: 10px 18px; border-radius: 8px; cursor: pointer; transition: 0.2s; flex: none; font-weight: 500;}
+.nav-btn:active { transform: scale(0.95); background: #3c3c3e; } /* Пружинящий тап */
+
+/* ФОРМЫ (Бюрократия) */
+.bureaucracy-form { flex-grow: 1; font-family: -apple-system, sans-serif; }
+.form-title { text-align: center; margin-bottom: 5px; font-family: 'Courier New', Courier, monospace; }
+.form-subtitle { text-align: center; color: #888; margin-top: 0; font-size: 0.9em; }
+
+input[type="text"], textarea { 
+    width: 100%; background: #1c1c1e; border: 1px solid #444; color: #fff; 
+    padding: 14px; margin-top: 6px; margin-bottom: 18px; 
+    font-family: -apple-system, sans-serif; font-size: 16px; 
+    -webkit-appearance: none; border-radius: 10px; /* Приятные круглые поля iOS */
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
-.nav-btn:hover { background: #444; color: white; border-color: var(--accent); }
+input[type="text"]:focus, textarea:focus {
+    outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(217, 75, 70, 0.2);
+}
 
-/* ФОРМЫ */
-.bureaucracy-form { flex-grow: 1; }
-.form-title { text-align: center; margin-bottom: 5px; }
-.form-subtitle { text-align: center; color: #888; margin-top: 0; font-style: italic; }
-input[type="text"], textarea { width: 100%; background: #111; border: 1px solid var(--border); color: #fff; padding: 12px; margin-top: 5px; margin-bottom: 15px; font-family: inherit; font-size: 16px; -webkit-appearance: none; border-radius: 3px; }
-.checkbox-group label, .radio-group label { display: block; margin-bottom: 8px; cursor: pointer; }
-.buttons { display: flex; gap: 10px; margin-top: 30px; margin-bottom: 20px; }
-button { padding: 15px; border: none; color: white; font-family: inherit; font-weight: bold; cursor: pointer; border-radius: 5px; flex: 1; transition: 0.3s; font-size: 1.1em; -webkit-appearance: none; }
-button.copy-btn { background: #555; } button.copy-btn:hover { background: #666; }
-button.send-btn { background: var(--accent); } button.send-btn:hover { background: var(--accent-hover); }
+.input-row { display: flex; gap: 12px; }
+.input-col { flex: 1; }
+.checkbox-group label, .radio-group label { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; cursor: pointer; font-size: 1.05rem; }
+input[type="checkbox"], input[type="radio"] { width: 20px; height: 20px; margin: 0; } /* Увеличенные хитбоксы чекбоксов */
 
-/* АДАПТАЦИЯ (ТЕЛЕФОНЫ) */
+.buttons { display: flex; gap: 12px; margin-top: 30px; margin-bottom: 20px; }
+button { 
+    padding: 16px; border: none; color: white; font-weight: 600; cursor: pointer; 
+    border-radius: 12px; flex: 1; font-size: 1.1em; -webkit-appearance: none;
+    transition: transform 0.1s, opacity 0.2s;
+}
+button:active { transform: scale(0.96); opacity: 0.8; }
+button.copy-btn { background: #444; } 
+button.send-btn { background: var(--accent); }
+
+
+/* =========================================
+   АДАПТАЦИЯ (ТЕЛЕФОНЫ)
+========================================= */
 @media (max-width: 768px) {
     body { flex-direction: column; }
-    #mobile-header { display: flex; }
-    #sidebar { position: fixed; top: 58px; left: -100%; width: 100%; height: calc(100dvh - 58px); z-index: 50; transition: left 0.3s ease-in-out; border-right: none; }
+    
+    /* Стеклянная фиксированная шапка (Glassmorphism) */
+    #mobile-header { 
+        display: flex; position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+        background: rgba(28, 28, 30, 0.75); 
+        backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); /* Фишка iOS */
+        padding: calc(15px + env(safe-area-inset-top)) 20px 15px 20px; 
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        align-items: center; justify-content: space-between;
+    }
+    #mobile-header .mobile-title { font-weight: 700; color: var(--accent); font-size: 1.1rem; letter-spacing: 1px; }
+    #menu-toggle { background: transparent; color: var(--text-color); padding: 8px 12px; font-size: 1rem; color: var(--accent); }
+    
+    /* Темный оверлей при открытии меню */
+    #menu-overlay {
+        display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.6); 
+        opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 90;
+        backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    }
+    #menu-overlay.active { opacity: 1; pointer-events: auto; }
+
+    /* Выдвижное меню */
+    #sidebar { 
+        position: fixed; top: 0; left: -100%; width: 85%; max-width: 320px; 
+        height: 100dvh; z-index: 101; transition: left 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); /* Плавная iOS анимация */
+        border-right: none; background: #1c1c1e;
+        padding-top: calc(20px + env(safe-area-inset-top));
+        padding-bottom: calc(20px + env(safe-area-inset-bottom));
+        box-shadow: 20px 0 40px rgba(0,0,0,0.8);
+    }
     #sidebar.active { left: 0; }
-    #main-content { padding: 20px 10px; }
-    .page-container { padding: 20px 15px; min-height: calc(100dvh - 100px); }
-    .page-stack::after, .page-stack::before { display: none; /* На мобилке тени-страницы убираем для экономии места */ }
-    .buttons { flex-direction: column; }
-    .book-cover { width: 85vw; height: calc(85vw * 1.5); max-width: 400px; max-height: 600px; }
+
+    /* Контент подстраивается под шапку и нижнюю полоску iPhone */
+    #main-content { 
+        padding: 0; /* Убираем внешние отступы, они будут внутри страницы */
+        padding-top: calc(70px + env(safe-area-inset-top)); 
+        padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    }
+    .page-container { 
+        padding: 25px 20px; 
+        min-height: calc(100dvh - 100px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); 
+        border-radius: 12px; border-left: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Меняем направление тени на мобилке */
+        width: 92%; margin: 0 auto; /* Легкие отступы по краям экрана */
+    }
+    .page-stack::after, .page-stack::before { display: none; }
+    
+    .buttons { flex-direction: column; gap: 15px; } /* Кнопки отправки крупные и одна под одной */
+    button { padding: 18px; border-radius: 14px; }
+    
+    .book-cover { width: 85vw; height: calc(85vw * 1.5); max-width: 360px; max-height: 540px; margin-top: 20px;}
     .book-front h1 { font-size: 2.5rem; }
-    .nav-btn { padding: 10px; font-size: 0.9em; }
 }
